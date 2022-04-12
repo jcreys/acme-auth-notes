@@ -15,6 +15,14 @@ const User = conn.define('user', {
   username: STRING,
   password: STRING
 });
+//added note model
+const Note = conn.define('note', {
+  text: STRING
+})
+
+Note.belongsTo(User);
+User.hasMany(Note);
+
 
 User.addHook('beforeSave', async(user)=> {
   if(user.changed('password')){
@@ -66,9 +74,32 @@ const syncAndSeed = async()=> {
     { username: 'moe', password: 'moe_pw'},
     { username: 'larry', password: 'larry_pw'}
   ];
+  const notes = [
+    {text: 'hello world'},
+    {text: 'lorem ipsum'},
+    {text: 'test text'}
+  ];
+
+  const [note1, note2, note3] = await Promise.all(
+    notes.map( note => Note.create(note))
+  );
   const [lucy, moe, larry] = await Promise.all(
     credentials.map( credential => User.create(credential))
   );
+  // await lucy.setNotes(note1);
+  // await moe.setNotes([note2, note3]);
+
+
+  note1.userId = lucy.id;
+  note2.userId = moe.id;
+  note3.userId = larry.id;
+
+  await Promise.all([
+    note1.save(),
+    note2.save(),
+    note3.save()
+  ])
+  console.log(note1);
   return {
     users: {
       lucy,
@@ -81,6 +112,7 @@ const syncAndSeed = async()=> {
 module.exports = {
   syncAndSeed,
   models: {
-    User
+    User,
+    Note
   }
 };
