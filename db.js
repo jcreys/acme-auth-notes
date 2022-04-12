@@ -99,7 +99,7 @@ const syncAndSeed = async()=> {
     note2.save(),
     note3.save()
   ])
-  console.log(note1);
+  // console.log(note1);
   return {
     users: {
       lucy,
