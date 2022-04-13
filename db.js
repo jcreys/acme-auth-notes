@@ -42,6 +42,7 @@ User.byToken = async(token)=> {
     if(user){
       return user;
     }
+    
     const error = Error('bad credentials');
     error.status = 401;
     throw error;
@@ -108,6 +109,8 @@ const syncAndSeed = async()=> {
     }
   };
 };
+
+
 
 module.exports = {
   syncAndSeed,

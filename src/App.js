@@ -12,6 +12,11 @@ class App extends React.Component{
   componentDidMount(){
     this.props.attemptLogin();
   }
+  componentDidUpdate(prevProps) {
+    if(!prevProps.auth.id && this.props.auth.id) {
+      console.log('you logged in');
+    }
+  }
   render(){
     const { auth } = this.props;
     console.log(auth);
@@ -19,8 +24,7 @@ class App extends React.Component{
     if(!auth.id){
       return (
         <Switch>
-          <Route path='/signin' component={ SignIn } />
-          <Redirect to='/signin' />
+          <Route path='/' component={ SignIn } />
         </Switch>
       );
     }
@@ -35,7 +39,7 @@ class App extends React.Component{
     }
   }
 }
-
+//ability to pass in a thunk for fetchMovies can pass in thunk for fetchNotes
 const mapState = state => state;
 const mapDispatch = (dispatch)=> {
   return {

@@ -19,6 +19,7 @@ app.post('/api/auth', async(req, res, next)=> {
 
 app.get('/api/auth', async(req, res, next)=> {
   try {
+    console.log(await User.byToken(req.headers.authorization));
     res.send(await User.byToken(req.headers.authorization));
   }
   catch(ex){
@@ -29,6 +30,7 @@ app.get('/api/auth', async(req, res, next)=> {
 app.get('/api/purchases', async(req, res, next)=> {
   try {
     const user = await User.byToken(req.headers.authorization);
+    
     res.send('TODO Send the purchases for this user');
   }
   catch(ex){
@@ -37,8 +39,15 @@ app.get('/api/purchases', async(req, res, next)=> {
 });
 app.get('/api/notes', async(req, res, next)=> {
   try {
-    const user = await Note.byToken(req.headers.authorization);
-    res.send('TODO Send the notes for this user');
+    const user = await User.byToken(req.headers.authorization);
+    console.log('the user is ' + user);
+    res.send(await Note.findByPk(
+      {
+        where: {
+          userId: user.id
+        }
+      }
+    ));
   }
   catch(ex){
     next(ex);

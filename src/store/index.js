@@ -55,3 +55,5 @@ const store = createStore(
 export { attemptLogin, signIn, logout };
 
 export default store;
+
+window.store = store;
