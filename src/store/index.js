@@ -2,10 +2,7 @@ import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import axios from 'axios';
-
-const notes = (state = [], action)=> {
-  return state;
-};
+import notes from './notesSlice'
 
 const auth = (state = {}, action)=> {
   if(action.type === 'SET_AUTH'){
@@ -30,9 +27,10 @@ const signIn = (credentials)=> {
     return dispatch(attemptLogin());
   }
 };
+
 const attemptLogin = ()=> {
   return async(dispatch)=> {
-    const token = window.localStorage.getItem('token');
+    const token = window.localStorage.getItem('token'); 
     if(token){
       const response = await axios.get('/api/auth', {
         headers: {

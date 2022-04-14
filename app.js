@@ -37,17 +37,40 @@ app.get('/api/purchases', async(req, res, next)=> {
     next(ex);
   }
 });
+
 app.get('/api/notes', async(req, res, next)=> {
   try {
     const user = await User.byToken(req.headers.authorization);
     console.log('the user is ' + user);
-    res.send(await Note.findByPk(
+    res.send(await Note.findAll(
       {
         where: {
           userId: user.id
         }
       }
     ));
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
+app.delete('/api/notes/:noteId', async(req, res, next)=> {
+  try {
+    const user = await User.byToken(req.headers.authorization);
+    console.log('the user is ' + user, req.params.noteId);
+    Note.destroy(
+      {
+        where: {
+          id: req.params.noteId
+        }
+      }
+    ).then(() => {
+      res.json({})
+    })
+    .catch(() => {
+      res.status(500).end()
+    })
   }
   catch(ex){
     next(ex);
